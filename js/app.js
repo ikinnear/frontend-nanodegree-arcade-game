@@ -1,12 +1,13 @@
 // Enemies our player must avoid
 var Enemy = function(badguy) {
-    // Variables applied to each of our instances go here
-    //Maximum speed (int) of the bad guy
-    this.max = 8;
-    this.min = 3;
+    //Minimum and Maximum speed (int) of the bad guy
+    this.min = 2;
+    this.max = 7;
+    this.modifier = 1;
+    //Set the initial x position of the bug of the left of the grid
     this.x = -100;
 
-    // starting locations and initial speeds
+    // starting y position and initial (random) speeds
     switch (badguy) {
         case "alpha":
             this.y = 60;
@@ -36,12 +37,18 @@ Enemy.prototype.update = function(dt) {
     //var time;
     this.x += 50 * dt * this.speed;
 
+    //if the bug collides with the player, reset the player and reset the score
     if((player.x > (this.x-25)) && (player.x < (this.x+25)) && (player.y > (this.y-25)) && (player.y < (this.y+25))){
-        player.x = 202.5;
-        player.y = 405;
-        player.update();
+        //reset the score
+        alert("You were squashed. Resetting score. Your Score: " + player.score + ". High Score: " + player.highscore);
+        player.score = 0;
+        for(var theEnemy in allEnemies)
+            allEnemies[theEnemy].modifier = 1;
+        //send the player back to the start
+        player.reset();
     }
 
+    //if the bug makes it to the right of the screen, reset it over to the left and set a new speed
     if(this.x > 500){
         this.x = -100;
         this.speed = this.setSpeed(this.max);
@@ -54,23 +61,30 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Sets a random enemy speed
+// Sets a random enemy speed within the preset min and max
 Enemy.prototype.setSpeed = function() {
-    return Math.floor((Math.random() * (this.max-this.min)) + 1 + this.min);
+    return Math.floor((Math.random() * (this.max-this.min)) + 1 + this.min) + this.modifier;
 }
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
+    // Set the starting position of the player
+    this.initialX = 202.5;
+    this.initialY = 405;
+    this.x = this.initialX;
+    this.y = this.initialY;
+    
+    // Set the initial score and high score
+    this.score = 0;
+    this.highscore = 0;
+
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/char-boy.png';
-    this.x = 202.5;
-    this.y = 405;
+    
 };
 
 // Update the player's position, required method for game
@@ -94,29 +108,42 @@ Player.prototype.handleInput = function(key) {
             if(this.y===405) //bottom of the map
                 break;
             this.y = this.y + 82.5;
-            this.update();
             break;
         case "up":
-            if(this.y===-7.5) //we won!!!!
+            if(this.y<75){ //we won!!!!
+                this.score += 1;
+                if(this.score > this.highscore)
+                    this.highscore = this.score;
+                
+                this.reset();
+                for(var theEnemy in allEnemies)
+                    allEnemies[theEnemy].modifier += 1;
+                
+                alert("Score: " + this.score + ". High Score: " + this.highscore + ". Speed is now " + allEnemies[0].modifier);
                 break;
+            }
             this.y = this.y - 82.5;
-            this.update();
             break;
         case "right":
             if(this.x===402.5) //right side of map
                 break;
             this.x = this.x + 100;
-            this.update();
             break;
         case "left":
             if(this.x===2.5) //left side of map
                 break;
             this.x = this.x - 100;
-            this.update();
             break;
     }
+    this.update();
 };
 
+Player.prototype.reset = function() {
+    // Set the inital x and y position of the player
+    this.x = this.initialX;
+    this.y = this.initialY;
+    this.update();
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
