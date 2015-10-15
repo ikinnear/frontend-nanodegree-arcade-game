@@ -1,3 +1,8 @@
+function overlay() {
+    el = document.getElementById("overlay_outer");
+    el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+}
+
 // Enemies our player must avoid
 var Enemy = function(badguy) {
     //Minimum and Maximum speed (int) of the bad guy
@@ -40,10 +45,15 @@ Enemy.prototype.update = function(dt) {
     //if the bug collides with the player, reset the player and reset the score
     if((player.x > (this.x-25)) && (player.x < (this.x+25)) && (player.y > (this.y-25)) && (player.y < (this.y+25))){
         //reset the score
-        alert("You were squashed. Resetting score. Your Score: " + player.score + ". High Score: " + player.highscore);
+        alert("You were squashed! Your Score: " + player.score + ". High Score: " + player.highscore);
         player.score = 0;
         for(var theEnemy in allEnemies)
             allEnemies[theEnemy].modifier = 1;
+
+        document.getElementById("score").innerHTML = player.score;
+        document.getElementById("high_score").innerHTML = player.highscore;
+        document.getElementById("bug_speed").innerHTML = allEnemies[0].modifier;
+
         //send the player back to the start
         player.reset();
     }
@@ -71,8 +81,8 @@ Enemy.prototype.setSpeed = function() {
 // a handleInput() method.
 var Player = function() {
     // Set the starting position of the player
-    this.initialX = 202.5;
-    this.initialY = 405;
+    this.initialX = 202;
+    this.initialY = 410;
     this.x = this.initialX;
     this.y = this.initialY;
     
@@ -93,7 +103,7 @@ Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    this.render();
 };
 
 // Draw the player on the screen, required method for game
@@ -107,36 +117,59 @@ Player.prototype.handleInput = function(key) {
         case "down":
             if(this.y===405) //bottom of the map
                 break;
-            this.y = this.y + 82.5;
+            this.y = this.y + 83;
+            this.update();
             break;
         case "up":
-            if(this.y<75){ //we won!!!!
-                this.score += 1;
-                if(this.score > this.highscore)
-                    this.highscore = this.score;
-                
-                this.reset();
-                for(var theEnemy in allEnemies)
-                    allEnemies[theEnemy].modifier += 1;
-                
-                alert("Score: " + this.score + ". High Score: " + this.highscore + ". Speed is now " + allEnemies[0].modifier);
-                break;
+            if(this.y>0){
+                this.y = this.y - 83;
+                this.update();
             }
-            this.y = this.y - 82.5;
+            else{
+                alert(his.y);
+            }
+            setTimeout(function(){
+                if(player.y===-5){ //we won!!!!
+                    player.score += 1;
+                    if(player.score > player.highscore)
+                        player.highscore = player.score;
+
+                    for(var theEnemy in allEnemies)
+                        allEnemies[theEnemy].modifier += 1;
+
+                    document.getElementById("score").innerHTML = player.score;
+                    document.getElementById("high_score").innerHTML = player.highscore;
+                    document.getElementById("bug_speed").innerHTML = allEnemies[0].modifier;
+                    alert("You made it! Your Score: " + player.score +". Read to try again?");
+                    player.reset();
+
+                    
+
+                }
+            }, 500);
+            
             break;
         case "right":
-            if(this.x===402.5) //right side of map
+            if(this.x===404) //right side of map
                 break;
-            this.x = this.x + 100;
+            this.x = this.x + 101;
+            this.update();
             break;
         case "left":
-            if(this.x===2.5) //left side of map
+            if(this.x===0) //left side of map
                 break;
-            this.x = this.x - 100;
+            this.x = this.x - 101;
+            this.update();
             break;
     }
-    this.update();
+    
 };
+
+Player.prototype.setAvatar = function(avatar) {
+    this.sprite = 'images/' + avatar;
+    this.render();
+    overlay();
+}
 
 Player.prototype.reset = function() {
     // Set the inital x and y position of the player
@@ -164,3 +197,5 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+
