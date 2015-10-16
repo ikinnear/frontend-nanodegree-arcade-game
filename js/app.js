@@ -127,6 +127,8 @@ Player.prototype.handleInput = function(key) {
                 this.y = this.y - 83;
                 this.update();
             }
+
+            //Add a time based function to avoid the player appearing simoultaneously in two places
             setTimeout(function(){
                 if(player.y===-5){ //we won!!!!
                     player.score += 1;
@@ -164,12 +166,14 @@ Player.prototype.handleInput = function(key) {
     
 };
 
+//sets the sprite for the player, selected on the inital page launch overlay
 Player.prototype.setAvatar = function(avatar) {
     this.sprite = 'images/' + avatar;
     this.render();
     overlay();
 }
 
+//Sets the player back to the start, identifed by the initial player x and y positions
 Player.prototype.reset = function() {
     // Set the inital x and y position of the player
     this.x = this.initialX;
