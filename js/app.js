@@ -12,7 +12,7 @@ var Enemy = function(badguy) {
     //Set the initial x position of the bug of the left of the grid
     this.x = -100;
 
-    // starting y position and initial (random) speeds
+    // starting y position and initial (random) speeds. Ensure an enemey appears on each road by providing three different starting points
     switch (badguy) {
         case "alpha":
             this.y = 60;
