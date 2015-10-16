@@ -43,7 +43,8 @@ Enemy.prototype.update = function(dt) {
     this.x += 50 * dt * this.speed;
 
     //if the bug collides with the player, reset the player and reset the score
-    if((player.x > (this.x-25)) && (player.x < (this.x+25)) && (player.y > (this.y-25)) && (player.y < (this.y+25))){
+    if((player.x > (this.x-10)) && (player.x < (this.x+10)) && (player.y > (this.y-25)) && (player.y < (this.y+25))){
+        player.update();
         //reset the score
         alert("You were squashed! Your Score: " + player.score + ". High Score: " + player.highscore);
         player.score = 0;
@@ -115,8 +116,9 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(key) {
     switch (key) {
         case "down":
-            if(this.y===405) //bottom of the map
+            if(this.y===410){ //bottom of the map
                 break;
+            }
             this.y = this.y + 83;
             this.update();
             break;
@@ -124,9 +126,6 @@ Player.prototype.handleInput = function(key) {
             if(this.y>0){
                 this.y = this.y - 83;
                 this.update();
-            }
-            else{
-                alert(his.y);
             }
             setTimeout(function(){
                 if(player.y===-5){ //we won!!!!

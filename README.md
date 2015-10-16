@@ -1,6 +1,12 @@
 frontend-nanodegree-arcade-game
 ===============================
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+1. How to start the game:
 
-for self-checking their submission.
+Launch index.html in the browser to start the game and select your Avatar.
+
+2. How to Play:
+
+Use the keyboard arrows to move across the game board and make it past the bugs to the water to win!
+
+With each crossing, the speed of the bugs will increase, and the store will increment. If you are hit by a bug the score will reset to 0.

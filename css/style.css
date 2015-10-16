@@ -52,10 +52,11 @@ h4 {
   position: relative;
   color: #464646;
 }
-h4 span {
-  background: url(gradient.png) repeat-x;
+h4 span{
+  background: url(images/gradient-dark.png) repeat-x;
   position: absolute;
+  bottom: -0.1em;
   display: block;
   width: 100%;
-  height: 16px;
+  height: 29px;
 }
